@@ -84,120 +84,90 @@ void glColor3b(GLbyte red, GLbyte green, GLbyte blue)
 {
   next_glColor3b(red, green, blue);
   printGLError();
-
-  debugPrint("glColor3b(red= %i, green= %i, blue= %i)\n", red, green, blue);
 }
 
 void glColor3bv(const GLbyte* v)
 {
   next_glColor3bv(v);
   printGLError();
-
-  debugPrint("glColor3bv(v= %x)\n", v);
 }
 
 void glColor3i(GLint red, GLint green, GLint blue)
 {
   next_glColor3i(red, green, blue);
   printGLError();
-
-  debugPrint("glColor3i(red= %i, green= %i, blue= %i)\n", red, green, blue);
 }
 
 void glColor3s(GLshort red, GLshort green, GLshort blue)
 {
   next_glColor3s(red, green, blue);
   printGLError();
-
-  debugPrint("glColor3s(red= %i, green= %i, blue= %i)\n", red, green, blue);
 }
 
 void glColor3sv(const GLshort* v)
 {
   next_glColor3sv(v);
   printGLError();
-
-  debugPrint("glColor3sv(v= %x)\n", v);
 }
 
 void glColor3ub(GLubyte red, GLubyte green, GLubyte blue)
 {
   next_glColor3ub(red, green, blue);
   printGLError();
-
-  debugPrint("glColor3ub(red= %x, green= %x, blue= %x)\n", red, green, blue);
 }
 
 void glColor3ui(GLuint red, GLuint green, GLuint blue)
 {
   next_glColor3ui(red, green, blue);
   printGLError();
-
-  debugPrint("glColor3ui(red= %u, green= %u, blue= %u)\n", red, green, blue);
 }
 
 void glColor3uiv(const GLuint* v)
 {
   next_glColor3uiv(v);
   printGLError();
-
-  debugPrint("glColor3uiv(v= %x)\n", v);
 }
 
 void glColor3us(GLushort red, GLushort green, GLushort blue)
 {
   next_glColor3us(red, green, blue);
   printGLError();
-
-  debugPrint("glColor3us(red= %u, green= %u, blue= %u)\n", red, green, blue);
 }
 
 void glColor3usv(const GLushort* v)
 {
   next_glColor3usv(v);
   printGLError();
-
-  debugPrint("glColor3usv(v= %x)\n", v);
 }
 
 void glColor4b(GLbyte red, GLbyte green, GLbyte blue, GLbyte alpha)
 {
   next_glColor4b(red, green, blue, alpha);
   printGLError();
-
-  debugPrint("glColor4b(red= %i, green= %i, blue= %i, alpha= %i)\n", red, green, blue, alpha);
 }
 
 void glColor4bv(const GLbyte* v)
 {
   next_glColor4bv(v);
   printGLError();
-
-  debugPrint("glColor4bv(v= %x)\n", v);
 }
 
 void glColor4i(GLint red, GLint green, GLint blue, GLint alpha)
 {
   next_glColor4i(red, green, blue, alpha);
   printGLError();
-
-  debugPrint("glColor4i(red= %i, green= %i, blue= %i, alpha= %i)\n", red, green, blue, alpha);
 }
 
 void glColor4iv(const GLint* v)
 {
   next_glColor4iv(v);
   printGLError();
-
-  debugPrint("glColor4iv(v= %x)\n", v);
 }
 
 void glColor4s(GLshort red, GLshort green, GLshort blue, GLshort alpha)
 {
   next_glColor4s(red, green, blue, alpha);
   printGLError();
-
-  debugPrint("glColor4s(red= %i, green= %i, blue= %i, alpha= %i)\n", red, green, blue, alpha);
 }
 
 void glColor4sv(const GLshort* v)
@@ -212,8 +182,6 @@ void glColor4ub(GLubyte red, GLubyte green, GLubyte blue, GLubyte alpha)
 {
   next_glColor4ub(red, green, blue, alpha);
   printGLError();
-
-  debugPrint("glColor4ub(red= %x, green= %x, blue= %x, alpha= %x)\n", red, green, blue, alpha);
 }
 
 void glColor4ui(GLuint red, GLuint green, GLuint blue, GLuint alpha)
@@ -228,8 +196,6 @@ void glColor4uiv(const GLuint* v)
 {
   next_glColor4uiv(v);
   printGLError();
-
-  debugPrint("glColor4uiv(v= %x)\n", v);
 }
 
 void glColor4us(GLushort red, GLushort green, GLushort blue, GLushort alpha)
@@ -244,16 +210,12 @@ void glColor4usv(const GLushort* v)
 {
   next_glColor4usv(v);
   printGLError();
-
-  debugPrint("glColor4usv(v= %x)\n", v);
 }
 
 void glColorMask(GLboolean red, GLboolean green, GLboolean blue, GLboolean alpha)
 {
   next_glColorMask(red, green, blue, alpha);
   printGLError();
-
-  debugPrint("glColorMask(red= %i, green= %i, blue= %i, alpha= %i)\n", red, green, blue, alpha);
 }
 
 void glColorMaterial(GLenum face, GLenum mode)
@@ -517,9 +479,9 @@ void glGetDoublev(GLenum pname, GLdouble* data)
 GLenum glGetError()
 {
   GLenum result= next_glGetError();
-  printGLError();
 
-  debugPrint("glGetError()= %s\n", result== 0 ? "GL_NO_ERROR" : getEnumString(result));
+  if(result!= GL_NO_ERROR)
+    debugPrint("glGetError()= %s\n", getEnumString(result));
 
   return result;
 }
@@ -990,16 +952,12 @@ void glNormal3b(GLbyte nx, GLbyte ny, GLbyte nz)
 {
   next_glNormal3b(nx, ny, nz);
   printGLError();
-
-  debugPrint("glNormal3b(nx= %i, ny= %i, nz= %i)\n", nx, ny, nz);
 }
 
 void glNormal3bv(const GLbyte* v)
 {
   next_glNormal3bv(v);
   printGLError();
-
-  debugPrint("glNormal3bv(v= %x)\n", v);
 }
 
 void glOrtho(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble zNear, GLdouble zFar)
@@ -1464,232 +1422,174 @@ void glTexCoord1d(GLdouble s)
 {
   next_glTexCoord1d(s);
   printGLError();
-
-  debugPrint("glTexCoord1d(s= %f)\n", s);
 }
 
 void glTexCoord1dv(const GLdouble* v)
 {
   next_glTexCoord1dv(v);
   printGLError();
-
-  debugPrint("glTexCoord1dv(v= %x)\n", v);
 }
 
 void glTexCoord1f(GLfloat s)
 {
   next_glTexCoord1f(s);
   printGLError();
-
-  debugPrint("glTexCoord1f(s= %f)\n", s);
 }
 
 void glTexCoord1fv(const GLfloat* v)
 {
   next_glTexCoord1fv(v);
   printGLError();
-
-  debugPrint("glTexCoord1fv(v= %x)\n", v);
 }
 
 void glTexCoord1i(GLint s)
 {
   next_glTexCoord1i(s);
   printGLError();
-
-  debugPrint("glTexCoord1i(s= %i)\n", s);
 }
 
 void glTexCoord1iv(const GLint* v)
 {
   next_glTexCoord1iv(v);
   printGLError();
-
-  debugPrint("glTexCoord1iv(v= %x)\n", v);
 }
 
 void glTexCoord1s(GLshort s)
 {
   next_glTexCoord1s(s);
   printGLError();
-
-  debugPrint("glTexCoord1s(s= %i)\n", s);
 }
 
 void glTexCoord1sv(const GLshort* v)
 {
   next_glTexCoord1sv(v);
   printGLError();
-
-  debugPrint("glTexCoord1sv(v= %x)\n", v);
 }
 
 void glTexCoord2d(GLdouble s, GLdouble t)
 {
   next_glTexCoord2d(s, t);
   printGLError();
-
-  debugPrint("glTexCoord2d(s= %f, t= %f)\n", s, t);
 }
 
 void glTexCoord2dv(const GLdouble* v)
 {
   next_glTexCoord2dv(v);
   printGLError();
-
-  debugPrint("glTexCoord2dv(v= %x)\n", v);
 }
 
 void glTexCoord2f(GLfloat s, GLfloat t)
 {
   next_glTexCoord2f(s, t);
   printGLError();
-
-  debugPrint("glTexCoord2f(s= %f, t= %f)\n", s, t);
 }
 
 void glTexCoord2i(GLint s, GLint t)
 {
   next_glTexCoord2i(s, t);
   printGLError();
-
-  debugPrint("glTexCoord2i(s= %i, t= %i)\n", s, t);
 }
 
 void glTexCoord2iv(const GLint* v)
 {
   next_glTexCoord2iv(v);
   printGLError();
-
-  debugPrint("glTexCoord2iv(v= %x)\n", v);
 }
 
 void glTexCoord2s(GLshort s, GLshort t)
 {
   next_glTexCoord2s(s, t);
   printGLError();
-
-  debugPrint("glTexCoord2s(s= %i, t= %i)\n", s, t);
 }
 
 void glTexCoord2sv(const GLshort* v)
 {
   next_glTexCoord2sv(v);
   printGLError();
-
-  debugPrint("glTexCoord2sv(v= %x)\n", v);
 }
 
 void glTexCoord3d(GLdouble s, GLdouble t, GLdouble r)
 {
   next_glTexCoord3d(s, t, r);
   printGLError();
-
-  debugPrint("glTexCoord3d(s= %f, t= %f, r= %f)\n", s, t, r);
 }
 
 void glTexCoord3dv(const GLdouble* v)
 {
   next_glTexCoord3dv(v);
   printGLError();
-
-  debugPrint("glTexCoord3dv(v= %x)\n", v);
 }
 
 void glTexCoord3f(GLfloat s, GLfloat t, GLfloat r)
 {
   next_glTexCoord3f(s, t, r);
   printGLError();
-
-  debugPrint("glTexCoord3f(s= %f, t= %f, r= %f)\n", s, t, r);
 }
 
 void glTexCoord3fv(const GLfloat* v)
 {
   next_glTexCoord3fv(v);
   printGLError();
-
-  debugPrint("glTexCoord3fv(v= %x)\n", v);
 }
 
 void glTexCoord3i(GLint s, GLint t, GLint r)
 {
   next_glTexCoord3i(s, t, r);
   printGLError();
-
-  debugPrint("glTexCoord3i(s= %i, t= %i, r= %i)\n", s, t, r);
 }
 
 void glTexCoord3iv(const GLint* v)
 {
   next_glTexCoord3iv(v);
   printGLError();
-
-  debugPrint("glTexCoord3iv(v= %x)\n", v);
 }
 
 void glTexCoord3s(GLshort s, GLshort t, GLshort r)
 {
   next_glTexCoord3s(s, t, r);
   printGLError();
-
-  debugPrint("glTexCoord3s(s= %i, t= %i, r= %i)\n", s, t, r);
 }
 
 void glTexCoord3sv(const GLshort* v)
 {
   next_glTexCoord3sv(v);
   printGLError();
-
-  debugPrint("glTexCoord3sv(v= %x)\n", v);
 }
 
 void glTexCoord4d(GLdouble s, GLdouble t, GLdouble r, GLdouble q)
 {
   next_glTexCoord4d(s, t, r, q);
   printGLError();
-
-  debugPrint("glTexCoord4d(s= %f, t= %f, r= %f, q= %f)\n", s, t, r, q);
 }
 
 void glTexCoord4dv(const GLdouble* v)
 {
   next_glTexCoord4dv(v);
   printGLError();
-
-  debugPrint("glTexCoord4dv(v= %x)\n", v);
 }
 
 void glTexCoord4f(GLfloat s, GLfloat t, GLfloat r, GLfloat q)
 {
   next_glTexCoord4f(s, t, r, q);
   printGLError();
-
-  debugPrint("glTexCoord4f(s= %f, t= %f, r= %f, q= %f)\n", s, t, r, q);
 }
 
 void glTexCoord4fv(const GLfloat* v)
 {
   next_glTexCoord4fv(v);
   printGLError();
-
-  debugPrint("glTexCoord4fv(v= %x)\n", v);
 }
 
 void glTexCoord4i(GLint s, GLint t, GLint r, GLint q)
 {
   next_glTexCoord4i(s, t, r, q);
   printGLError();
-
-  debugPrint("glTexCoord4i(s= %i, t= %i, r= %i, q= %i)\n", s, t, r, q);
 }
 
 void glTexCoord4iv(const GLint* v)
 {
   next_glTexCoord4iv(v);
   printGLError();
-
-  debugPrint("glTexCoord4iv(v= %x)\n", v);
 }
 
 void glTexCoord4s(GLshort s, GLshort t, GLshort r, GLshort q)
@@ -1824,104 +1724,78 @@ void glVertex2dv(const GLdouble* v)
 {
   next_glVertex2dv(v);
   printGLError();
-
-  debugPrint("glVertex2dv(v= %x)\n", v);
 }
 
 void glVertex2f(GLfloat x, GLfloat y)
 {
   next_glVertex2f(x, y);
   printGLError();
-
-  debugPrint("glVertex2f(x= %f, y= %f)\n", x, y);
 }
 
 void glVertex2fv(const GLfloat* v)
 {
   next_glVertex2fv(v);
   printGLError();
-
-  debugPrint("glVertex2fv(v= %x)\n", v);
 }
 
 void glVertex2i(GLint x, GLint y)
 {
   next_glVertex2i(x, y);
   printGLError();
-
-  debugPrint("glVertex2i(x= %i, y= %i)\n", x, y);
 }
 
 void glVertex2iv(const GLint* v)
 {
   next_glVertex2iv(v);
   printGLError();
-
-  debugPrint("glVertex2iv(v= %x)\n", v);
 }
 
 void glVertex2s(GLshort x, GLshort y)
 {
   next_glVertex2s(x, y);
   printGLError();
-
-  debugPrint("glVertex2s(x= %i, y= %i)\n", x, y);
 }
 
 void glVertex2sv(const GLshort* v)
 {
   next_glVertex2sv(v);
   printGLError();
-
-  debugPrint("glVertex2sv(v= %x)\n", v);
 }
 
 void glVertex3i(GLint x, GLint y, GLint z)
 {
   next_glVertex3i(x, y, z);
   printGLError();
-
-  debugPrint("glVertex3i(x= %i, y= %i, z= %i)\n", x, y, z);
 }
 
 void glVertex3s(GLshort x, GLshort y, GLshort z)
 {
   next_glVertex3s(x, y, z);
   printGLError();
-
-  debugPrint("glVertex3s(x= %i, y= %i, z= %i)\n", x, y, z);
 }
 
 void glVertex4d(GLdouble x, GLdouble y, GLdouble z, GLdouble w)
 {
   next_glVertex4d(x, y, z, w);
   printGLError();
-
-  debugPrint("glVertex4d(x= %f, y= %f, z= %f, w= %f)\n", x, y, z, w);
 }
 
 void glVertex4f(GLfloat x, GLfloat y, GLfloat z, GLfloat w)
 {
   next_glVertex4f(x, y, z, w);
   printGLError();
-
-  debugPrint("glVertex4f(x= %f, y= %f, z= %f, w= %f)\n", x, y, z, w);
 }
 
 void glVertex4i(GLint x, GLint y, GLint z, GLint w)
 {
   next_glVertex4i(x, y, z, w);
   printGLError();
-
-  debugPrint("glVertex4i(x= %i, y= %i, z= %i, w= %i)\n", x, y, z, w);
 }
 
 void glVertex4s(GLshort x, GLshort y, GLshort z, GLshort w)
 {
   next_glVertex4s(x, y, z, w);
   printGLError();
-
-  debugPrint("glVertex4s(x= %i, y= %i, z= %i, w= %i)\n", x, y, z, w);
 }
 
 
@@ -2132,14 +2006,6 @@ void glCopyTexSubImage3D(GLenum target, GLint level, GLint xoffset, GLint yoffse
   printGLError();
 
   debugPrint("glCopyTexSubImage3D(target= %s, level= %i, xoffset= %i, yoffset= %i, zoffset= %i, x= %i, y= %i, width= %u, height= %u)\n", getEnumString(target), level, xoffset, yoffset, zoffset, x, y, width, height);
-}
-
-void glDrawRangeElements(GLenum mode, GLuint start, GLuint end, GLsizei count, GLenum type, const void * indices)
-{
-  next_glDrawRangeElements(mode, start, end, count, type, indices);
-  printGLError();
-
-  debugPrint("glDrawRangeElements(mode= %s, start= %u, end= %u, count= %u, type= %s, indices= %x)\n", getEnumString(mode), start, end, count, getEnumString(type), indices);
 }
 
 void glTexImage3D(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLsizei depth, GLint border, GLenum format, GLenum type, const void * pixels)
@@ -2919,38 +2785,6 @@ void glBeginQuery(GLenum target, GLuint id)
   debugPrint("glBeginQuery(target= %s, id= %u)\n", getEnumString(target), id);
 }
 
-void glBindBuffer(GLenum target, GLuint buffer)
-{
-  next_glBindBuffer(target, buffer);
-  printGLError();
-
-  debugPrint("glBindBuffer(target= %s, buffer= %u)\n", getEnumString(target), buffer);
-}
-
-void glBufferData(GLenum target, GLsizeiptr size, const void * data, GLenum usage)
-{
-  next_glBufferData(target, size, data, usage);
-  printGLError();
-
-  debugPrint("glBufferData(target= %s, size= %u, data= %x, usage= %s)\n", getEnumString(target), size, data, getEnumString(usage));
-}
-
-void glBufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, const void * data)
-{
-  next_glBufferSubData(target, offset, size, data);
-  printGLError();
-
-  debugPrint("glBufferSubData(target= %s, offset= %i, size= %u, data= %x)\n", getEnumString(target), offset, size, data);
-}
-
-void glDeleteBuffers(GLsizei n, const GLuint* buffers)
-{
-  next_glDeleteBuffers(n, buffers);
-  printGLError();
-
-  debugPrint("glDeleteBuffers(n= %u, buffers= %x)\n", n, buffers);
-}
-
 void glDeleteQueries(GLsizei n, const GLuint* ids)
 {
   next_glDeleteQueries(n, ids);
@@ -2965,14 +2799,6 @@ void glEndQuery(GLenum target)
   printGLError();
 
   debugPrint("glEndQuery(target= %s)\n", getEnumString(target));
-}
-
-void glGenBuffers(GLsizei n, GLuint* buffers)
-{
-  next_glGenBuffers(n, buffers);
-  printGLError();
-
-  debugPrint("glGenBuffers(n= %u, buffers= %x)\n", n, buffers);
 }
 
 void glGenQueries(GLsizei n, GLuint* ids)
@@ -3051,36 +2877,8 @@ GLboolean glIsQuery(GLuint id)
   return result;
 }
 
-void * glMapBuffer(GLenum target, GLenum access)
-{
-  void * result= next_glMapBuffer(target, access);
-  printGLError();
-
-  debugPrint("glMapBuffer(target= %s, access= %s)= %x\n", getEnumString(target), getEnumString(access), result);
-
-  return result;
-}
-
-GLboolean glUnmapBuffer(GLenum target)
-{
-  GLboolean result= next_glUnmapBuffer(target);
-  printGLError();
-
-  debugPrint("glUnmapBuffer(target= %s)= %i\n", getEnumString(target), result);
-
-  return result;
-}
-
 
 // GL_VERSION_2_0
-
-void glAttachShader(GLuint program, GLuint shader)
-{
-  next_glAttachShader(program, shader);
-  printGLError();
-
-  debugPrint("glAttachShader(program= %u, shader= %u)\n", program, shader);
-}
 
 void glBindAttribLocation(GLuint program, GLuint index, const GLchar* name)
 {
@@ -3098,50 +2896,6 @@ void glBlendEquationSeparate(GLenum modeRGB, GLenum modeAlpha)
   debugPrint("glBlendEquationSeparate(modeRGB= %s, modeAlpha= %s)\n", getEnumString(modeRGB), getEnumString(modeAlpha));
 }
 
-void glCompileShader(GLuint shader)
-{
-  next_glCompileShader(shader);
-  printGLError();
-
-  debugPrint("glCompileShader(shader= %u)\n", shader);
-}
-
-GLuint glCreateProgram()
-{
-  GLuint result= next_glCreateProgram();
-  printGLError();
-
-  debugPrint("glCreateProgram()= %u\n", result);
-
-  return result;
-}
-
-GLuint glCreateShader(GLenum type)
-{
-  GLuint result= next_glCreateShader(type);
-  printGLError();
-
-  debugPrint("glCreateShader(type= %s)= %u\n", getEnumString(type), result);
-
-  return result;
-}
-
-void glDeleteProgram(GLuint program)
-{
-  next_glDeleteProgram(program);
-  printGLError();
-
-  debugPrint("glDeleteProgram(program= %u)\n", program);
-}
-
-void glDeleteShader(GLuint shader)
-{
-  next_glDeleteShader(shader);
-  printGLError();
-
-  debugPrint("glDeleteShader(shader= %u)\n", shader);
-}
-
 void glDetachShader(GLuint program, GLuint shader)
 {
   next_glDetachShader(program, shader);
@@ -3150,28 +2904,12 @@ void glDetachShader(GLuint program, GLuint shader)
   debugPrint("glDetachShader(program= %u, shader= %u)\n", program, shader);
 }
 
-void glDisableVertexAttribArray(GLuint index)
-{
-  next_glDisableVertexAttribArray(index);
-  printGLError();
-
-  debugPrint("glDisableVertexAttribArray(index= %u)\n", index);
-}
-
 void glDrawBuffers(GLsizei n, const GLenum* bufs)
 {
   next_glDrawBuffers(n, bufs);
   printGLError();
 
   debugPrint("glDrawBuffers(n= %u, bufs= %x)\n", n, bufs);
-}
-
-void glEnableVertexAttribArray(GLuint index)
-{
-  next_glEnableVertexAttribArray(index);
-  printGLError();
-
-  debugPrint("glEnableVertexAttribArray(index= %u)\n", index);
 }
 
 void glGetActiveAttrib(GLuint program, GLuint index, GLsizei bufSize, GLsizei* length, GLint* size, GLenum* type, GLchar* name)
@@ -3198,16 +2936,6 @@ void glGetAttachedShaders(GLuint program, GLsizei maxCount, GLsizei* count, GLui
   debugPrint("glGetAttachedShaders(program= %u, maxCount= %u, count= %x, shaders= %x)\n", program, maxCount, count, shaders);
 }
 
-GLint glGetAttribLocation(GLuint program, const GLchar* name)
-{
-  GLint result= next_glGetAttribLocation(program, name);
-  printGLError();
-
-  debugPrint("glGetAttribLocation(program= %u, name= %x)= %i\n", program, name, result);
-
-  return result;
-}
-
 void glGetProgramInfoLog(GLuint program, GLsizei bufSize, GLsizei* length, GLchar* infoLog)
 {
   next_glGetProgramInfoLog(program, bufSize, length, infoLog);
@@ -3221,7 +2949,7 @@ void glGetProgramiv(GLuint program, GLenum pname, GLint* params)
   next_glGetProgramiv(program, pname, params);
   printGLError();
 
-  debugPrint("glGetProgramiv(program= %u, pname= %s, params= %x)\n", program, getEnumString(pname), params);
+  debugPrint("glGetProgramiv(program= %u, pname= %s, params= %x)\n", program, getEnumString(pname), params[0]);
 }
 
 void glGetShaderInfoLog(GLuint shader, GLsizei bufSize, GLsizei* length, GLchar* infoLog)
@@ -3245,17 +2973,7 @@ void glGetShaderiv(GLuint shader, GLenum pname, GLint* params)
   next_glGetShaderiv(shader, pname, params);
   printGLError();
 
-  debugPrint("glGetShaderiv(shader= %u, pname= %s, params= %x)\n", shader, getEnumString(pname), params);
-}
-
-GLint glGetUniformLocation(GLuint program, const GLchar* name)
-{
-  GLint result= next_glGetUniformLocation(program, name);
-  printGLError();
-
-  debugPrint("glGetUniformLocation(program= %u, name= %x)= %i\n", program, name, result);
-
-  return result;
+  debugPrint("glGetShaderiv(shader= %u, pname= %s, params= %x)\n", shader, getEnumString(pname), params[0]);
 }
 
 void glGetUniformfv(GLuint program, GLint location, GLfloat* params)
@@ -3334,14 +3052,6 @@ void glLinkProgram(GLuint program)
   debugPrint("glLinkProgram(program= %u)\n", program);
 }
 
-void glShaderSource(GLuint shader, GLsizei count, const GLchar*const* string, const GLint* length)
-{
-  next_glShaderSource(shader, count, string, length);
-  printGLError();
-
-  debugPrint("glShaderSource(shader= %u, count= %u, string= %x, length= %x)\n", shader, count, string, length);
-}
-
 void glStencilFuncSeparate(GLenum face, GLenum func, GLint ref, GLuint mask)
 {
   next_glStencilFuncSeparate(face, func, ref, mask);
@@ -3364,166 +3074,6 @@ void glStencilOpSeparate(GLenum face, GLenum sfail, GLenum dpfail, GLenum dppass
   printGLError();
 
   debugPrint("glStencilOpSeparate(face= %s, sfail= %s, dpfail= %s, dppass= %s)\n", getEnumString(face), getEnumString(sfail), getEnumString(dpfail), getEnumString(dppass));
-}
-
-void glUniform1f(GLint location, GLfloat v0)
-{
-  next_glUniform1f(location, v0);
-  printGLError();
-
-  debugPrint("glUniform1f(location= %i, v0= %f)\n", location, v0);
-}
-
-void glUniform1fv(GLint location, GLsizei count, const GLfloat* value)
-{
-  next_glUniform1fv(location, count, value);
-  printGLError();
-
-  debugPrint("glUniform1fv(location= %i, count= %u, value= %x)\n", location, count, value);
-}
-
-void glUniform1i(GLint location, GLint v0)
-{
-  next_glUniform1i(location, v0);
-  printGLError();
-
-  debugPrint("glUniform1i(location= %i, v0= %i)\n", location, v0);
-}
-
-void glUniform1iv(GLint location, GLsizei count, const GLint* value)
-{
-  next_glUniform1iv(location, count, value);
-  printGLError();
-
-  debugPrint("glUniform1iv(location= %i, count= %u, value= %x)\n", location, count, value);
-}
-
-void glUniform2f(GLint location, GLfloat v0, GLfloat v1)
-{
-  next_glUniform2f(location, v0, v1);
-  printGLError();
-
-  debugPrint("glUniform2f(location= %i, v0= %f, v1= %f)\n", location, v0, v1);
-}
-
-void glUniform2fv(GLint location, GLsizei count, const GLfloat* value)
-{
-  next_glUniform2fv(location, count, value);
-  printGLError();
-
-  debugPrint("glUniform2fv(location= %i, count= %u, value= %x)\n", location, count, value);
-}
-
-void glUniform2i(GLint location, GLint v0, GLint v1)
-{
-  next_glUniform2i(location, v0, v1);
-  printGLError();
-
-  debugPrint("glUniform2i(location= %i, v0= %i, v1= %i)\n", location, v0, v1);
-}
-
-void glUniform2iv(GLint location, GLsizei count, const GLint* value)
-{
-  next_glUniform2iv(location, count, value);
-  printGLError();
-
-  debugPrint("glUniform2iv(location= %i, count= %u, value= %x)\n", location, count, value);
-}
-
-void glUniform3f(GLint location, GLfloat v0, GLfloat v1, GLfloat v2)
-{
-  next_glUniform3f(location, v0, v1, v2);
-  printGLError();
-
-  debugPrint("glUniform3f(location= %i, v0= %f, v1= %f, v2= %f)\n", location, v0, v1, v2);
-}
-
-void glUniform3fv(GLint location, GLsizei count, const GLfloat* value)
-{
-  next_glUniform3fv(location, count, value);
-  printGLError();
-
-  debugPrint("glUniform3fv(location= %i, count= %u, value= %x)\n", location, count, value);
-}
-
-void glUniform3i(GLint location, GLint v0, GLint v1, GLint v2)
-{
-  next_glUniform3i(location, v0, v1, v2);
-  printGLError();
-
-  debugPrint("glUniform3i(location= %i, v0= %i, v1= %i, v2= %i)\n", location, v0, v1, v2);
-}
-
-void glUniform3iv(GLint location, GLsizei count, const GLint* value)
-{
-  next_glUniform3iv(location, count, value);
-  printGLError();
-
-  debugPrint("glUniform3iv(location= %i, count= %u, value= %x)\n", location, count, value);
-}
-
-void glUniform4f(GLint location, GLfloat v0, GLfloat v1, GLfloat v2, GLfloat v3)
-{
-  next_glUniform4f(location, v0, v1, v2, v3);
-  printGLError();
-
-  debugPrint("glUniform4f(location= %i, v0= %f, v1= %f, v2= %f, v3= %f)\n", location, v0, v1, v2, v3);
-}
-
-void glUniform4fv(GLint location, GLsizei count, const GLfloat* value)
-{
-  next_glUniform4fv(location, count, value);
-  printGLError();
-
-  debugPrint("glUniform4fv(location= %i, count= %u, value= %x)\n", location, count, value);
-}
-
-void glUniform4i(GLint location, GLint v0, GLint v1, GLint v2, GLint v3)
-{
-  next_glUniform4i(location, v0, v1, v2, v3);
-  printGLError();
-
-  debugPrint("glUniform4i(location= %i, v0= %i, v1= %i, v2= %i, v3= %i)\n", location, v0, v1, v2, v3);
-}
-
-void glUniform4iv(GLint location, GLsizei count, const GLint* value)
-{
-  next_glUniform4iv(location, count, value);
-  printGLError();
-
-  debugPrint("glUniform4iv(location= %i, count= %u, value= %x)\n", location, count, value);
-}
-
-void glUniformMatrix2fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat* value)
-{
-  next_glUniformMatrix2fv(location, count, transpose, value);
-  printGLError();
-
-  debugPrint("glUniformMatrix2fv(location= %i, count= %u, transpose= %i, value= %x)\n", location, count, transpose, value);
-}
-
-void glUniformMatrix3fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat* value)
-{
-  next_glUniformMatrix3fv(location, count, transpose, value);
-  printGLError();
-
-  debugPrint("glUniformMatrix3fv(location= %i, count= %u, transpose= %i, value= %x)\n", location, count, transpose, value);
-}
-
-void glUniformMatrix4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat* value)
-{
-  next_glUniformMatrix4fv(location, count, transpose, value);
-  printGLError();
-
-  debugPrint("glUniformMatrix4fv(location= %i, count= %u, transpose= %i, value= %x)\n", location, count, transpose, value);
-}
-
-void glUseProgram(GLuint program)
-{
-  next_glUseProgram(program);
-  printGLError();
-
-  debugPrint("glUseProgram(program= %u)\n", program);
 }
 
 void glValidateProgram(GLuint program)
@@ -3822,64 +3372,8 @@ void glVertexAttrib4usv(GLuint index, const GLushort* v)
   debugPrint("glVertexAttrib4usv(index= %u, v= %x)\n", index, v);
 }
 
-void glVertexAttribPointer(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const void * pointer)
-{
-  next_glVertexAttribPointer(index, size, type, normalized, stride, pointer);
-  printGLError();
-
-  debugPrint("glVertexAttribPointer(index= %u, size= %i, type= %s, normalized= %i, stride= %u, pointer= %x)\n", index, size, getEnumString(type), normalized, stride, pointer);
-}
-
 
 // GL_VERSION_2_1
-
-void glUniformMatrix2x3fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat* value)
-{
-  next_glUniformMatrix2x3fv(location, count, transpose, value);
-  printGLError();
-
-  debugPrint("glUniformMatrix2x3fv(location= %i, count= %u, transpose= %i, value= %x)\n", location, count, transpose, value);
-}
-
-void glUniformMatrix2x4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat* value)
-{
-  next_glUniformMatrix2x4fv(location, count, transpose, value);
-  printGLError();
-
-  debugPrint("glUniformMatrix2x4fv(location= %i, count= %u, transpose= %i, value= %x)\n", location, count, transpose, value);
-}
-
-void glUniformMatrix3x2fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat* value)
-{
-  next_glUniformMatrix3x2fv(location, count, transpose, value);
-  printGLError();
-
-  debugPrint("glUniformMatrix3x2fv(location= %i, count= %u, transpose= %i, value= %x)\n", location, count, transpose, value);
-}
-
-void glUniformMatrix3x4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat* value)
-{
-  next_glUniformMatrix3x4fv(location, count, transpose, value);
-  printGLError();
-
-  debugPrint("glUniformMatrix3x4fv(location= %i, count= %u, transpose= %i, value= %x)\n", location, count, transpose, value);
-}
-
-void glUniformMatrix4x2fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat* value)
-{
-  next_glUniformMatrix4x2fv(location, count, transpose, value);
-  printGLError();
-
-  debugPrint("glUniformMatrix4x2fv(location= %i, count= %u, transpose= %i, value= %x)\n", location, count, transpose, value);
-}
-
-void glUniformMatrix4x3fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat* value)
-{
-  next_glUniformMatrix4x3fv(location, count, transpose, value);
-  printGLError();
-
-  debugPrint("glUniformMatrix4x3fv(location= %i, count= %u, transpose= %i, value= %x)\n", location, count, transpose, value);
-}
 
 
 // GL_VERSION_3_0
@@ -3898,14 +3392,6 @@ void glBeginTransformFeedback(GLenum primitiveMode)
   printGLError();
 
   debugPrint("glBeginTransformFeedback(primitiveMode= %s)\n", getEnumString(primitiveMode));
-}
-
-void glBindBufferBase(GLenum target, GLuint index, GLuint buffer)
-{
-  next_glBindBufferBase(target, index, buffer);
-  printGLError();
-
-  debugPrint("glBindBufferBase(target= %s, index= %u, buffer= %u)\n", getEnumString(target), index, buffer);
 }
 
 void glBindBufferRange(GLenum target, GLuint index, GLuint buffer, GLintptr offset, GLsizeiptr size)
@@ -3940,14 +3426,6 @@ void glBindRenderbuffer(GLenum target, GLuint renderbuffer)
   debugPrint("glBindRenderbuffer(target= %s, renderbuffer= %u)\n", getEnumString(target), renderbuffer);
 }
 
-void glBindVertexArray(GLuint array)
-{
-  next_glBindVertexArray(array);
-  printGLError();
-
-  debugPrint("glBindVertexArray(array= %u)\n", array);
-}
-
 void glBlitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1, GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1, GLbitfield mask, GLenum filter)
 {
   next_glBlitFramebuffer(srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1, dstY1, mask, filter);
@@ -3980,14 +3458,6 @@ void glClearBufferfi(GLenum buffer, GLint drawbuffer, GLfloat depth, GLint stenc
   printGLError();
 
   debugPrint("glClearBufferfi(buffer= %s, drawbuffer= %i, depth= %f, stencil= %i)\n", getEnumString(buffer), drawbuffer, depth, stencil);
-}
-
-void glClearBufferfv(GLenum buffer, GLint drawbuffer, const GLfloat* value)
-{
-  next_glClearBufferfv(buffer, drawbuffer, value);
-  printGLError();
-
-  debugPrint("glClearBufferfv(buffer= %s, drawbuffer= %i, value= %x)\n", getEnumString(buffer), drawbuffer, value);
 }
 
 void glClearBufferiv(GLenum buffer, GLint drawbuffer, const GLint* value)
@@ -4028,14 +3498,6 @@ void glDeleteRenderbuffers(GLsizei n, const GLuint* renderbuffers)
   printGLError();
 
   debugPrint("glDeleteRenderbuffers(n= %u, renderbuffers= %x)\n", n, renderbuffers);
-}
-
-void glDeleteVertexArrays(GLsizei n, const GLuint* arrays)
-{
-  next_glDeleteVertexArrays(n, arrays);
-  printGLError();
-
-  debugPrint("glDeleteVertexArrays(n= %u, arrays= %x)\n", n, arrays);
 }
 
 void glDisablei(GLenum target, GLuint index)
@@ -4134,14 +3596,6 @@ void glGenRenderbuffers(GLsizei n, GLuint* renderbuffers)
   debugPrint("glGenRenderbuffers(n= %u, renderbuffers= %x)\n", n, renderbuffers);
 }
 
-void glGenVertexArrays(GLsizei n, GLuint* arrays)
-{
-  next_glGenVertexArrays(n, arrays);
-  printGLError();
-
-  debugPrint("glGenVertexArrays(n= %u, arrays= %x)\n", n, arrays);
-}
-
 void glGenerateMipmap(GLenum target)
 {
   next_glGenerateMipmap(target);
@@ -4197,7 +3651,7 @@ const GLubyte* glGetStringi(GLenum name, GLuint index)
   const GLubyte* result= next_glGetStringi(name, index);
   printGLError();
 
-  debugPrint("glGetStringi(name= %s, index= %u)= %x\n", getEnumString(name), index, result);
+  debugPrint("glGetStringi(name= %s, index= %u)= %s\n", getEnumString(name), index, result);
 
   return result;
 }
@@ -4286,16 +3740,6 @@ GLboolean glIsVertexArray(GLuint array)
   printGLError();
 
   debugPrint("glIsVertexArray(array= %u)= %i\n", array, result);
-
-  return result;
-}
-
-void * glMapBufferRange(GLenum target, GLintptr offset, GLsizeiptr length, GLbitfield access)
-{
-  void * result= next_glMapBufferRange(target, offset, length, access);
-  printGLError();
-
-  debugPrint("glMapBufferRange(target= %s, offset= %i, length= %u, access= %x)= %x\n", getEnumString(target), offset, length, access, result);
 
   return result;
 }
@@ -4581,14 +4025,6 @@ void glCopyBufferSubData(GLenum readTarget, GLenum writeTarget, GLintptr readOff
   printGLError();
 
   debugPrint("glCopyBufferSubData(readTarget= %s, writeTarget= %s, readOffset= %i, writeOffset= %i, size= %u)\n", getEnumString(readTarget), getEnumString(writeTarget), readOffset, writeOffset, size);
-}
-
-void glDrawArraysInstanced(GLenum mode, GLint first, GLsizei count, GLsizei instancecount)
-{
-  next_glDrawArraysInstanced(mode, first, count, instancecount);
-  printGLError();
-
-  debugPrint("glDrawArraysInstanced(mode= %s, first= %i, count= %u, instancecount= %u)\n", getEnumString(mode), first, count, instancecount);
 }
 
 void glDrawElementsInstanced(GLenum mode, GLsizei count, GLenum type, const void * indices, GLsizei instancecount)
@@ -6402,14 +5838,6 @@ void glBindImageTexture(GLuint unit, GLuint texture, GLint level, GLboolean laye
   printGLError();
 
   debugPrint("glBindImageTexture(unit= %u, texture= %u, level= %i, layered= %i, layer= %i, access= %s, format= %s)\n", unit, texture, level, layered, layer, getEnumString(access), getEnumString(format));
-}
-
-void glDrawArraysInstancedBaseInstance(GLenum mode, GLint first, GLsizei count, GLsizei instancecount, GLuint baseinstance)
-{
-  next_glDrawArraysInstancedBaseInstance(mode, first, count, instancecount, baseinstance);
-  printGLError();
-
-  debugPrint("glDrawArraysInstancedBaseInstance(mode= %s, first= %i, count= %u, instancecount= %u, baseinstance= %u)\n", getEnumString(mode), first, count, instancecount, baseinstance);
 }
 
 void glDrawElementsInstancedBaseInstance(GLenum mode, GLsizei count, GLenum type, const void * indices, GLsizei instancecount, GLuint baseinstance)

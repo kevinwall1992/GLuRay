@@ -105,3 +105,7 @@ config files contain '-apply' followed by any of the following options:
 <h3>building the GUI</h3>
 <p>the GUI is located in glurayGUI folder which can be built with Qt.  Currently this is disabled and has not been tested with newer versions of GLuRay, you will need to modify defines.h to enable run_client.  The client is run by first running the GUI program using GLuRay and then launching GLuRay instances with other programs which will then attach to the GUI.</p>
 <p>GLuRay was written by Carson Brownlee, originally at the University of Utah with continuted development at the Texas Advanced Computing Center at the University of Texas at Austin.  It is based on SpyGlassGL and the Manta ray tracer.</p>
+
+<h2>GLuRayS</h2>
+
+GLuRayS adds support for modern OpenGL applications. Supports OpenGL 2.x and some newer features. Works with Paraview 5 and many Superbible examples. Read more here: https://www.dropbox.com/s/u798zhzdh20irod/GluRaySFinalReport.pdf?dl=0

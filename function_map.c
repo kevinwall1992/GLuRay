@@ -1131,6 +1131,6 @@ static FunctionMapElement function_map[] = {
   // MPI
   
   {(void(*))&next_MPI_Finalize, "MPI_Finalize"},
-    
+
   {NULL, NULL} 
 };

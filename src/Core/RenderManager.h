@@ -124,6 +124,8 @@ public:
     _renderer->unlock(mutex);
   }
 
+  void EnableShaderBlitting() { _renderer->EnableShaderBlitting(); }
+
   protected:
 
   std::queue<Work*> accel_work_queue;

@@ -22,9 +22,133 @@
 
 #include <sstream>
 
-#include <GL/gl.h>
+#include "../../NextDeclarations.h"
 
 using namespace glr;
+
+
+const char *vertex_shader_string=   "#version 120\n"
+                                    "attribute vec3 vertex;\n"
+                                    "attribute vec2 texture_coordinates;\n"
+                                    "varying vec2 frag_texture_coordinates;\n"
+                                    "void main(){\n"
+                                    "gl_Position= vec4(vertex, 1.0f);"
+                                    "frag_texture_coordinates= texture_coordinates;}\n";
+         
+const char *fragment_shader_string= "#version 120\n"
+                                    "varying vec2 frag_texture_coordinates;\n"
+                                    "uniform sampler2D texture_;"
+                                    "void main(){\n"
+                                    "gl_FragColor= vec4(texture2D(texture_, frag_texture_coordinates).xyz, 1.0f);}";
+
+const float quad_vertices[] = { 1.0f, 1.0f, -0.1f, 1, 1,
+                              -1.0f, -1.0f, -0.1f, 0, 0,
+                              1.0f, -1.0f, -0.1f, 1, 0,
+                                
+                              1.0f, 1.0f, -0.1f, 1, 1,
+                              -1.0f, 1.0f, -0.1f, 0, 1,
+                              -1.0f, -1.0f, -0.1f, 0, 0 };
+const int quad_vertex_count= 6;
+                              
+GLuint CompileShader(GLenum type, const char *source_string)
+{
+  GLuint shader_handle= next_glCreateShader(type);
+
+  next_glShaderSource(shader_handle, 1, &source_string, NULL);
+  next_glCompileShader(shader_handle);
+
+  GLint status;
+  next_glGetShaderiv(shader_handle, GL_COMPILE_STATUS, &status);
+  if (status == GL_FALSE)
+  {
+    GLint info_log_length;
+    next_glGetShaderiv(shader_handle, GL_INFO_LOG_LENGTH, &info_log_length);
+
+    GLchar *info_log = new GLchar[info_log_length + 1];
+    next_glGetShaderInfoLog(shader_handle, info_log_length, NULL, info_log);
+
+    const char *shader_type_string = NULL;
+    switch(GL_VERTEX_SHADER)
+    {
+    case GL_VERTEX_SHADER: shader_type_string = "vertex"; break;
+    case GL_GEOMETRY_SHADER: shader_type_string = "geometry"; break;
+    case GL_FRAGMENT_SHADER: shader_type_string = "fragment"; break;
+    }
+
+    std::cout << "GLuRayS: Blitting shader compile failure in " << shader_type_string << ": " << info_log;
+    delete[] info_log;
+  }
+  
+  return shader_handle;
+}
+
+void Renderer::EnableShaderBlitting()
+{
+  if(blit_using_shaders)
+    return;
+  
+  blit_using_shaders= true;
+  
+  GLint current_program;
+  next_glGetIntegerv(GL_CURRENT_PROGRAM, &current_program);
+
+  GLuint vertex_shader_handle= CompileShader(GL_VERTEX_SHADER, vertex_shader_string);
+  GLuint fragment_shader_handle= CompileShader(GL_FRAGMENT_SHADER, fragment_shader_string);
+
+  blitting_program_handle = next_glCreateProgram();
+
+  next_glAttachShader(blitting_program_handle, vertex_shader_handle);
+  next_glAttachShader(blitting_program_handle, fragment_shader_handle);
+
+  next_glLinkProgram(blitting_program_handle);
+
+  next_glDetachShader(blitting_program_handle, vertex_shader_handle);
+  next_glDetachShader(blitting_program_handle, fragment_shader_handle);
+  
+  GLint status;
+  next_glGetProgramiv(blitting_program_handle, GL_LINK_STATUS, &status);
+  if (status == GL_FALSE)
+  {
+    GLint info_log_length;
+    next_glGetProgramiv(blitting_program_handle, GL_INFO_LOG_LENGTH, &info_log_length);
+
+    GLchar *info_log = new GLchar[info_log_length + 1];
+    next_glGetProgramInfoLog(blitting_program_handle, info_log_length, NULL, info_log);
+    cout << "GLuRayS: Blitting shader linker failure: " << info_log;
+    delete[] info_log;
+  }   
+
+  next_glUseProgram(blitting_program_handle);
+
+  GLuint vbo_handle;
+  next_glGenBuffers(1, &vbo_handle);
+  next_glBindBuffer(GL_ARRAY_BUFFER, vbo_handle);
+  next_glBufferData(GL_ARRAY_BUFFER, sizeof(float)* quad_vertex_count* 5, quad_vertices, GL_STATIC_DRAW);
+
+  next_glGenVertexArrays(1, &blitting_vao_handle);
+  next_glBindVertexArray(blitting_vao_handle);
+
+  GLint position_attribute = next_glGetAttribLocation(blitting_program_handle, "vertex");
+  next_glEnableVertexAttribArray(position_attribute);
+  next_glVertexAttribPointer(position_attribute, 3, GL_FLOAT, GL_FALSE, 5* sizeof(float), 0);
+
+  GLint texture_coordinates_attribute = next_glGetAttribLocation(blitting_program_handle, "texture_coordinates");
+  next_glEnableVertexAttribArray(texture_coordinates_attribute);
+  next_glVertexAttribPointer(texture_coordinates_attribute, 2, GL_FLOAT, GL_FALSE, 5* sizeof(float), (void *)(3* sizeof(float)));
+
+  next_glActiveTexture(GL_TEXTURE0);
+
+  next_glGenTextures(1, &blitting_texture_handle);
+
+  next_glBindTexture(GL_TEXTURE_2D, blitting_texture_handle);
+  next_glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  next_glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  next_glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  next_glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  
+  
+  next_glUseProgram(current_program);
+}
 
   Renderer::Renderer()
 : current_renderable(NULL),
@@ -38,6 +162,8 @@ using namespace glr;
 {
   gl_lights.resize(8);
   _mutexes.push_back(new Manta::Mutex("Renderer"));
+
+  blit_using_shaders= false;
 }
 
 

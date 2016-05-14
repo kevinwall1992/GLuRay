@@ -42,6 +42,9 @@ SET(GLURAY_SRC
   src/Core/OBJScene.cc
   src/Core/Scene.cc
   src/Core/GeometryGenerator.cc
+  src/Core/glurays.cc
+  src/Core/glurays_state.cc
+  src/Core/glurays_rendering.cc
   )
 
 
@@ -164,7 +167,7 @@ CONFIGURE_FILE(
 #
 SET(DEBUG_MSGS NO CACHE BOOL "Debug messages")
 SET(DEBUG_GL NO CACHE BOOL "output gl calls")
-SET(INTERCEPT_GL_ERRORS NO CACHE BOOL "prevent OpenGL errors from reaching host code")
+SET(INTERCEPT_GL_ERRORS YES CACHE BOOL "prevent OpenGL errors from reaching host code")
 SET(USE_GLURAY YES CACHE BOOL "use gluray calls")
 SET(RUN_CLIENT NO CACHE BOOL "run gui client")
 

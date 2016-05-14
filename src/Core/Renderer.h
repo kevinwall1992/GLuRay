@@ -26,6 +26,7 @@
 #include "Renderable.h"
 #include "GLTypes.h"
 #include "Scene.h"
+#include <GL/gl.h>
 
 #include <Model/Lights/DirectionalLight.h>
 #include <Interface/LightSet.h>
@@ -51,12 +52,17 @@ namespace glr
 
 class Renderer
 {
+protected:
+  bool blit_using_shaders;
+  GLuint blitting_program_handle;
+  GLuint blitting_texture_handle;
+  GLuint blitting_vao_handle;
+
 public:
   Renderer() ;
   ~Renderer() {}
   virtual void setBGColor(float r, float g, float b, float a)
   {
-    printf("setBGColor\n");
     Manta::Color color = Manta::Color(Manta::RGBColor(r,g,b));
     if ((params.env_map == "" || params.env_map == "none") && (current_bgcolor.color[0] != color[0] || current_bgcolor.color[1] != color[1] || current_bgcolor.color[2] != color[2] || current_bgcolor.a != a))
     {
@@ -117,6 +123,8 @@ public:
     _mutexes[mutex]->unlock();
   }
   void displayFrame();
+
+  void EnableShaderBlitting();
 
   //protected:
 

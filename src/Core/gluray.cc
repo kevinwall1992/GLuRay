@@ -17,6 +17,7 @@
 #include <Engine/Display/GLXImageDisplay.h>
 
 #include "gluray.h"
+#include "GLuRayS.h"
 #include "main.h"
 #include "CDTimer.h"
 #include "DirtyInstance.h"
@@ -92,13 +93,15 @@ int num_elements = 0;
 stack<Manta::AffineTransform> transform_stack;
 bool needFOVCalc = true;
 
-
 int matrix_mode = GL_MODELVIEW;
 int resolution[2];
 //vector<float> rgb_data, depth_data;
 //string port = "3490";
 int max_packet_size = 100;
 bool rendered = true;
+
+bool is_in_glurays_mode= false;
+
 
 enum gr_MATERIALS {
   gr_PHONG,
@@ -306,6 +309,8 @@ void gr_init()
 
 void gr_addVertex(float x, float y, float z)
 {
+  gr_setGLuRayMode();
+
   GRCHECK();
   numadds++;
   if (!support_immediate && !IN_DL)
@@ -547,9 +552,26 @@ void gr_render()
   // needFOVCalc = true;
   //if (needFOVCalc)
   {
-    GLfloat m[16];
-    glGetFloatv(GL_PROJECTION_MATRIX, m);
-    double fov = 2.0*atan(1.0/m[0])*180.0/M_PI;
+    float fov_indicator= 1.0f;
+    
+    if(is_in_glurays_mode)
+    {
+      RenderModel *render_model= RenderModel::GetLargestDrawnRenderModel();
+      if(render_model!= nullptr) 
+      {
+        float *projection_matrix= render_model->GetProjectionMatrix();
+        fov_indicator= projection_matrix[0];  
+        delete projection_matrix;
+      }
+    }
+    else
+    {
+      GLfloat m[16];
+      glGetFloatv(GL_PROJECTION_MATRIX, m);
+      fov_indicator= m[0];
+    }
+    
+    double fov = 2.0*atan(1.0/fov_indicator)*180.0/M_PI;
     GLuRayRenderParameters& p = rm->getRenderParameters();
     p.camera_vfov = p.camera_hfov = fov;
     p.camera_vfov = fov*float(p.height)/float(p.width);
@@ -560,6 +582,9 @@ void gr_render()
   }
   //timer.start();
   static CDTimer sceneTimer, renderTimer, displayTimer;
+
+  if(gr_isInGLuRaySMode())
+    rm->EnableShaderBlitting();
 
   //renderTimer.start();
   rm->render();
@@ -573,7 +598,7 @@ void gr_render()
 
 
 
-void gr_materialfv(int face, int pname, float* params)
+void gr_materialfv(int face, int pname, const float* params)
 {
   GRCHECK();
   GLMaterial& mat = rm->getCurrentMaterial();
@@ -620,7 +645,7 @@ void gr_materialf(int face, int pname, float param)
 
 }
 
-void gr_materialiv(int face, int pname, int* params)
+void gr_materialiv(int face, int pname, const int* params)
 {
   GRCHECK();
 
@@ -686,7 +711,6 @@ void gr_loadIdentity()
 
 void gr_newList(size_t list, int mode)
 {
-  printf("newlist\n");
   fflush(stdout);
   GRCHECK();
   gr_pushMatrix();
@@ -721,7 +745,6 @@ void gr_newList(size_t list, int mode)
 
 void gr_endList()
 {
-  printf("endlist\n");
   fflush(stdout);
   GRCHECK();
   //
@@ -989,14 +1012,30 @@ void gr_colorPointer(GLint size, GLenum type, GLsizei stride, const GLvoid * poi
 
 void gr_drawArrays(GLenum mode, GLint first, GLsizei count)
 {
-  GRCHECK();
-  gr_drawElements(mode, count, GL_UNSIGNED_INT, NULL);
+  if(gr_isInGLuRaySMode())
+  {
+    grs_DrawArrays(mode, first, count);
+    return;
+  }
+  else
+  {
+    GRCHECK();
+    gr_drawElements(mode, count, GL_UNSIGNED_INT, NULL);
+  }
 }
 
 void gr_drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid* indices)
 {
-  GRCHECK();
-  gr_drawElements_internal(mode, count, type, indices, 0);
+  if(gr_isInGLuRaySMode())
+  {
+    grs_DrawElements(mode, count, type, indices);
+    return;
+  }
+  else
+  {
+    GRCHECK();
+    gr_drawElements_internal(mode, count, type, indices, 0);
+  }
 }
 
 void gr_drawElements_internal(GLenum mode, GLsizei count, GLenum type, const GLvoid* indices, GLint first)
@@ -1241,7 +1280,7 @@ void gr_clear(GLbitfield mask)
 
 
 
-void gr_light(int light, int pname, float* params)
+void gr_light(int light, int pname, const float* params)
 {
   GRCHECK();
   Manta::Vector p(params[0], params[1], params[2]);
@@ -1389,6 +1428,231 @@ void gr_unlock(const int num)
 {
   GRCHECK();
   rm->unlock(num);
+}
+
+
+int gr_isInGLuRaySMode()
+{
+  return is_in_glurays_mode;
+}
+
+void gr_setGLuRaySMode()
+{
+  if(!is_in_glurays_mode)
+    cout << "Switching to GLuRayS mode.\n";
+  is_in_glurays_mode= true;
+}
+
+void gr_setGLuRayMode()
+{
+  is_in_glurays_mode= false;
+}
+
+
+void gr_genBuffers(GLsizei n, GLuint* buffers)
+{
+  grs_GenBuffers(n, buffers);
+}
+
+void gr_deleteBuffers(GLsizei n, const GLuint* buffers)
+{
+  grs_DeleteBuffers(n, buffers);
+}
+
+void gr_bindBuffer(GLenum target, GLuint buffer)
+{
+  grs_BindBuffer(target, buffer);
+}
+
+void gr_bufferData(GLenum target, GLsizeiptr size, const GLvoid* data, GLenum usage)
+{
+  grs_BufferData(target, size, data, usage);
+}
+
+void gr_bufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, const void * data)
+{
+  grs_BufferSubData(target, offset, size, data);
+}
+
+void gr_bindBufferBase(GLenum target, GLuint index, GLuint buffer)
+{
+  grs_BindBufferBase(target, index, buffer);
+}
+
+void * gr_mapBufferRange(GLenum target, GLintptr offset, GLsizeiptr length, GLbitfield access)
+{
+  return grs_MapBufferRange(target, offset, length, access);
+}
+
+GLboolean gr_unmapBuffer(GLenum target)
+{
+  return grs_UnmapBuffer(target);
+}
+
+void * gr_mapBuffer(GLenum target, GLenum access)
+{
+  return grs_MapBuffer(target, access);
+}
+
+GLuint gr_createShader(GLenum type, GLuint gl_result)
+{
+  gr_setGLuRaySMode();
+
+  return grs_CreateShader(type, gl_result);
+}
+
+void gr_shaderSource(GLuint shader, GLsizei count, const GLchar* const* strings, const GLint* lengths)
+{
+  gr_setGLuRaySMode();
+
+  return grs_ShaderSource(shader, count, strings, lengths);
+}
+
+void gr_compileShader(GLuint shader)
+{
+  gr_setGLuRaySMode();
+
+  grs_CompileShader(shader);
+}
+
+void gr_deleteShader(GLuint shader)
+{
+  gr_setGLuRaySMode();
+
+  grs_DeleteShader(shader);
+}
+
+GLuint gr_createProgram(GLuint gl_result)
+{
+  gr_setGLuRaySMode();
+
+  return grs_CreateProgram(gl_result);
+}
+
+void gr_attachShader(GLuint program, GLuint shader)
+{
+  gr_setGLuRaySMode();
+
+  grs_AttachShader(program, shader);
+}
+
+void gr_detachShader(GLuint program, GLuint shader)
+{
+  gr_setGLuRaySMode();
+
+  grs_DetachShader(program, shader);
+}
+
+void gr_useProgram(GLuint program)
+{
+  gr_setGLuRaySMode();
+
+  grs_UseProgram(program);
+}
+
+void gr_deleteProgram(GLuint program)
+{
+  gr_setGLuRaySMode();
+
+  grs_DeleteProgram(program);
+}
+
+GLint gr_getUniformLocation(GLuint program, const GLchar* name, int gl_result)
+{
+  gr_setGLuRaySMode();
+
+  return grs_GetUniformLocation(program, name, gl_result);
+}
+
+void gr_uniform3f(GLint location, GLfloat v0, GLfloat v1, GLfloat v2)
+{
+  gr_setGLuRaySMode();
+
+  grs_Uniform3f(location, v0, v1, v2);
+}
+
+void gr_uniform3fv(GLint location, GLsizei count, const GLfloat* value)
+{
+  gr_setGLuRaySMode();
+
+  grs_Uniform3fv(location, count, value);
+}
+
+void gr_uniform4f(GLint location, GLfloat v0, GLfloat v1, GLfloat v2, GLfloat v3)
+{
+  gr_setGLuRaySMode();
+
+  grs_Uniform4f(location, v0, v1, v2, v3);
+}
+
+void gr_uniform4fv(GLint location, GLsizei count, const GLfloat* value)
+{
+  gr_setGLuRaySMode();
+
+    grs_Uniform4fv(location, count, value);
+}
+
+void gr_uniformMatrix4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat* value)
+{
+  gr_setGLuRaySMode();
+
+  grs_UniformMatrix4fv(location , count, transpose, value);
+}
+
+void gr_genVertexArrays(GLsizei n, GLuint* arrays)
+{
+  gr_setGLuRaySMode();
+
+  grs_GenVertexArrays(n, arrays);
+}
+
+void gr_deleteVertexArrays(GLsizei n, const GLuint* arrays)
+{
+  gr_setGLuRaySMode();
+
+  grs_DeleteVertexArrays(n, arrays);
+}
+
+void gr_bindVertexArrays(GLuint array)
+{
+  gr_setGLuRaySMode();
+
+  grs_BindVertexArrays(array);
+}
+
+GLint gr_getAttributeLocation(GLuint program, const GLchar* name, int gl_result)
+{
+  gr_setGLuRaySMode();
+
+  return grs_GetAttributeLocation(program, name, gl_result);
+}
+
+void gr_enableVertexAttributeArray(GLuint attribute)
+{
+  gr_setGLuRaySMode();
+
+  grs_EnableVertexAttributeArray(attribute);
+}
+
+void gr_disableVertexAttributeArray(GLuint attribute)
+{
+  gr_setGLuRaySMode();
+
+  grs_DisableVertexAttributeArray(attribute);
+}
+
+void gr_vertexAttributePointer(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid* pointer)
+{
+  gr_setGLuRaySMode();
+
+  grs_VertexAttributePointer(index, size, type, normalized, stride, pointer);
+}
+
+void gr_drawRangeElements(GLenum mode, GLuint start, GLuint end, GLsizei count, GLenum type, const GLvoid * indices)
+{
+  gr_setGLuRaySMode();
+
+  grs_DrawRangeElements(mode, start, end, count, type, indices);
 }
 
 

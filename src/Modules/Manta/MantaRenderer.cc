@@ -68,6 +68,7 @@
 #include <arpa/inet.h>
 
 #include <GL/gl.h>
+#include "../../../NextDeclarations.h"
 //#include <GL/glx.h>
 //#include <X11/Xlib.h>
 //#include <X11/Xutil.h>
@@ -1531,9 +1532,9 @@ void MantaRenderer::displayFrame()
       for (int i= 0; i < mwidth; i++)
       {
         if ((mi+i*2)>= (xres*yres*2))
-          printf("mindex out of range:%d\n", mi+i*2);
+          printf("mindex out of range:%d\n", (int)(mi+i*2));
         else if ((ti+i)>= (xres*yres*4))
-          printf("tindex out of range:%d\n", ti+i);
+          printf("tindex out of range:%d\n", (int)(ti+i));
         else
         {
 #if 0 //USE_MPI
@@ -1606,26 +1607,51 @@ void MantaRenderer::displayFrame()
   {
     if (_rank <= 0)
     {
-      //glPushClientAttrib(GL_UNPACK_ROW_LENGTH | GL_UNPACK_ALIGNMENT | GL_PACK_ALIGNMENT );
-      glPixelStorei(GL_UNPACK_ROW_LENGTH, rowLength);
-      glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-      glPixelStorei(GL_PACK_ALIGNMENT, 1);
-      glDisable(GL_DEPTH_TEST);
-      glDisable(GL_SCISSOR_TEST);
-      glDisable(GL_ALPHA_TEST);
-    GLint rmode, dmode;
-    glGetIntegerv(GL_READ_BUFFER, &rmode);
-    glGetIntegerv(GL_DRAW_BUFFER, &dmode);
-    glDrawBuffer(rmode);
+      if(this->blit_using_shaders!= true)
+      {    
+        //glPushClientAttrib(GL_UNPACK_ROW_LENGTH | GL_UNPACK_ALIGNMENT | GL_PACK_ALIGNMENT );
+        glPixelStorei(GL_UNPACK_ROW_LENGTH, rowLength);
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+        glPixelStorei(GL_PACK_ALIGNMENT, 1);
+        glDisable(GL_DEPTH_TEST);
+        glDisable(GL_SCISSOR_TEST);
+        glDisable(GL_ALPHA_TEST);
+      GLint rmode, dmode;
+      glGetIntegerv(GL_READ_BUFFER, &rmode);
+      glGetIntegerv(GL_DRAW_BUFFER, &dmode);
+      glDrawBuffer(rmode);
 
-      static CDTimer timer5;
-      timer5.start();
-      glDrawPixels(mwidth,mheight,GL_RGB,GL_UNSIGNED_BYTE, data);
-          glDrawBuffer(dmode);
-    glFinish();
-      timer5.stop();
-      //printf("rank: 0 drawpixels time: %f\n", timer5.getDelta());
-      //glPopClientAttrib();
+        static CDTimer timer5;
+        timer5.start();
+        glDrawPixels(mwidth,mheight,GL_RGB,GL_UNSIGNED_BYTE, data);
+            glDrawBuffer(dmode);
+      glFinish();
+        timer5.stop();
+        //printf("rank: 0 drawpixels time: %f\n", timer5.getDelta());
+        //glPopClientAttrib();
+      }
+      else
+      {
+        GLint current_program;
+        next_glGetIntegerv(GL_CURRENT_PROGRAM, &current_program);
+        GLint current_vao;
+        next_glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &current_vao);
+        
+        
+        next_glUseProgram(blitting_program_handle);
+        
+        next_glActiveTexture(GL_TEXTURE0);
+        next_glBindTexture(GL_TEXTURE_2D, blitting_texture_handle);
+        next_glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, mwidth, mheight, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+
+        next_glDisable(GL_DEPTH_TEST);
+        next_glBindVertexArray(blitting_vao_handle);
+        next_glDrawArrays(GL_TRIANGLES, 0, 6);
+        
+        
+        next_glUseProgram(current_program);
+        next_glBindVertexArray(current_vao);
+      }
     }
   }
 
